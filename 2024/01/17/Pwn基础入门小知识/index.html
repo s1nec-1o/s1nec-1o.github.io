@@ -1,0 +1,537 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Pwn基础入门小知识 | S1nec-1o's B1og</title><meta name="author" content="s1nec-1o"><meta name="copyright" content="s1nec-1o"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="PWN小知识由于pwn相关的一些专业术语新手入门时不易了解(我也是)，因此在此写下零零碎碎(有错误请在评论区指出或补充)，并且还有一些相关容易忘记的命令(多看多用) NX即No-eXecute（不可执行）的意思，NX（DEP）的基本原理是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，此时CPU就会抛出异常，而不是去执行恶意指令。 NX位（N">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pwn基础入门小知识">
+<meta property="og:url" content="http://s1nec-1o.github.io/2024/01/17/Pwn%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E5%B0%8F%E7%9F%A5%E8%AF%86/index.html">
+<meta property="og:site_name" content="S1nec-1o&#39;s B1og">
+<meta property="og:description" content="PWN小知识由于pwn相关的一些专业术语新手入门时不易了解(我也是)，因此在此写下零零碎碎(有错误请在评论区指出或补充)，并且还有一些相关容易忘记的命令(多看多用) NX即No-eXecute（不可执行）的意思，NX（DEP）的基本原理是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，此时CPU就会抛出异常，而不是去执行恶意指令。 NX位（N">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/BAMBOOiii/photo@main/img/202404281614288.png">
+<meta property="article:published_time" content="2024-01-16T16:02:19.000Z">
+<meta property="article:modified_time" content="2024-04-28T09:08:50.273Z">
+<meta property="article:author" content="s1nec-1o">
+<meta property="article:tag" content="traditional pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/BAMBOOiii/photo@main/img/202404281614288.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/BAMBOOiii/photo@main/img/202404281712481.jpg"><link rel="canonical" href="http://s1nec-1o.github.io/2024/01/17/Pwn%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E5%B0%8F%E7%9F%A5%E8%AF%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><meta/><link rel="stylesheet" href="/css/index.css?v=4.12.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"距离文章发布已经过去","messageNext":"天了，信息可能已经过时"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Pwn基础入门小知识',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-28 17:08:50'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 8 || hour >= 20
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="S1nec-1o's B1og" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/BAMBOOiii/photo@main/img/202404281614288.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/BAMBOOiii/photo@main/img/202404281616326.png')"><nav id="nav"><span id="blog-info"><a href="/" title="S1nec-1o's B1og"><span class="site-name">S1nec-1o's B1og</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Pwn基础入门小知识</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-01-16T16:02:19.000Z" title="发表于 2024-01-17 00:02:19">2024-01-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-28T09:08:50.273Z" title="更新于 2024-04-28 17:08:50">2024-04-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Pwn%E7%9F%A5%E8%AF%86/">Pwn知识</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="PWN小知识"><a href="#PWN小知识" class="headerlink" title="PWN小知识"></a>PWN小知识</h2><p>由于pwn相关的一些专业术语新手入门时不易了解(我也是)，因此在此写下零零碎碎(<strong>有错误请在评论区指出或补充</strong>)，并且还有一些相关容易忘记的命令(多看多用)</p>
+<h3 id="NX"><a href="#NX" class="headerlink" title="NX"></a>NX</h3><p>即No-eXecute（不可执行）的意思，NX（DEP）的基本原理是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，此时CPU就会抛出异常，而不是去执行恶意指令。</p>
+<p>NX位（No-eXecute），也称为XD位（eXecute Disable），是现代CPU提供的一个硬件安全特性，用于标记内存页是否可以执行代码。启用NX位可以提高操作系统的安全性，因为它可以防止攻击者将数据区域（如栈或堆）中的代码作为执行指令。</p>
+<p>当NX位启用时：</p>
+<ul>
+<li><strong>数据执行保护（DEP）</strong>：操作系统可以利用NX位来实现数据执行保护（DEP），防止在非执行内存区域（如默认的栈和堆）执行代码。</li>
+<li><strong>防止缓冲区溢出攻击</strong>：这使得缓冲区溢出和某些类型的内存损坏攻击更加困难，因为即使攻击者能够将恶意代码注入到一个程序的内存空间，也不能执行注入的代码，因为内存页不允许执行。</li>
+<li><strong>与ASLR协同工作</strong>：NX位通常与地址空间布局随机化（ASLR）结合使用，以进一步提高安全性。</li>
+</ul>
+<p>在大多数现代操作系统中，NX位默认是启用的。例如，在Linux系统中，可以通过执行<code>dmesg | grep NX</code>来检查NX位是否启用。如果看到输出中有”NX (Execute Disable) protection: active”这样的信息，就表示NX位是启用的。</p>
+<p>在编译程序时，可以使用特定的编译器选项来确保生成的二进制文件与NX位特性兼容，例如在GCC中使用<code>-z noexecstack</code>选项可以防止栈被标记为可执行，这样就可以利用NX位提供的保护。</p>
+<h3 id="Canary"><a href="#Canary" class="headerlink" title="Canary"></a>Canary</h3><p>表示栈保护功能有没有开启。栈溢出保护是一种缓冲区溢出攻击缓解手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shellcode能够得到执行。当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就停止程序运行。</p>
+<p>在计算机安全领域，”canary”（金丝雀）一词通常指的是”栈金丝雀”，这是一种用于检测和防止缓冲区溢出攻击的保护措施。栈金丝雀是一个已知的值，它被放置在栈上的局部变量和控制数据（如返回地址）之间。其思想是，如果发生缓冲区溢出，并且覆盖了返回地址，那么在覆盖返回地址之前，这个金丝雀值也会被覆盖。</p>
+<p>在函数调用结束之前，程序会检查栈金丝雀的值是否发生改变。如果金丝雀值被覆盖，程序就知道发生了栈溢出攻击，并且可以采取措施，通常是立即终止程序，以防止攻击者执行任意代码。这种方法是一种普遍的安全防护措施，被广泛应用于现代操作系统和编译器中。</p>
+<p>当你看到”Canary found”这样的信息时，可能是在描述一个安全检查机制发现了栈金丝雀的值已经被篡改，从而检测到了潜在的攻击。</p>
+<h3 id="GOT和PLT不为人知的关系"><a href="#GOT和PLT不为人知的关系" class="headerlink" title="GOT和PLT不为人知的关系"></a>GOT和PLT不为人知的关系</h3><p>在ELF（Executable and Linkable Format）文件中，GOT（Global Offset Table）和PLT（Procedure Linkage Table）协同工作以支持动态链接。它们通常用于动态链接库（shared libraries）中的函数调用。</p>
+<p>这里是它们如何工作的简要概述：</p>
+<ol>
+<li><strong>PLT (Procedure Linkage Table)</strong>: 当你的程序调用一个动态链接库（如 libc）中的函数时，它实际上首先调用的是PLT中的一个”桩”（stub）。这个桩是一个小的代码片段，它跳转到GOT中的一个特定条目。</li>
+<li><strong>GOT (Global Offset Table)</strong>: GOT包含了函数和变量的地址。在程序第一次调用外部函数时，GOT中相应的条目被设置为指向PLT中的另一个条目，该条目将控制权转交给动态链接器，它将查找真正的函数地址，然后更新GOT中的条目以指向该地址。这意味着在第一次调用之后，GOT条目会被更新，以后的每次调用都会直接跳转到实际的函数地址，而不再经过PLT。</li>
+</ol>
+<p>因此，回答你的问题：在程序启动时，GOT表上的函数地址并不存储PLT函数的地址，而是存储一个指向动态链接器进行符号解析的地址。一旦符号（例如函数）被解析，GOT表中的条目会<strong>被更新为指向实际的函数地址</strong>。这个过程被称为懒惰绑定（lazy binding），因为符号解析是在运行时按需进行的。</p>
+<p>简而言之，GOT最初包含指向PLT中代码的指针，用于触发动态解析。解析完成后，GOT会被更新为指向实际的函数地址。</p>
+<h3 id="RELRP"><a href="#RELRP" class="headerlink" title="RELRP"></a>RELRP</h3><p>Full RELRO（完全的重定位只读）和Partial RELRO（部分的重定位只读）是Linux系统中用来提高二进制程序安全性的技术。它们控制程序启动时动态链接器如何处理全局偏移表（GOT）和过程链接表（PLT）。以下是它们之间的主要区别：</p>
+<h4 id="Partial-RELRO"><a href="#Partial-RELRO" class="headerlink" title="Partial RELRO"></a>Partial RELRO</h4><ul>
+<li><strong>GOT保护</strong>: Partial RELRO不会将GOT设置为只读，这意味着程序运行时GOT中的条目可以被修改。</li>
+<li><strong>性能</strong>: 通常比Full RELRO有更好的性能，因为它允许延迟绑定，即在函数第一次被调用时才解析其地址。</li>
+<li><strong>安全性</strong>: 提供了一定程度的保护，但不如Full RELRO强。</li>
+<li><strong>启动时间</strong>: 启动时间较短，因为不需要在程序启动时立即解析所有的动态符号。</li>
+</ul>
+<h4 id="Full-RELRO"><a href="#Full-RELRO" class="headerlink" title="Full RELRO"></a>Full RELRO</h4><ul>
+<li><strong>GOT保护</strong>: 将GOT设置为只读，防止攻击者在运行时修改GOT中的条目。</li>
+<li><strong>PLT和GOT分离</strong>: PLT条目在程序启动时就被解析并填充到GOT中，之后GOT被标记为只读。</li>
+<li><strong>性能</strong>: 可能会有轻微的性能损失，因为启动时需要解析所有动态链接的函数地址。</li>
+<li><strong>安全性</strong>: 提供更高水平的安全性，防止了GOT覆写攻击，这是一种常见的利用技术。</li>
+<li><strong>启动时间</strong>: 启动时间可能会稍长，因为需要在程序执行前解析所有的动态符号。</li>
+</ul>
+<p>总的来说，Full RELRO提供了更高级别的安全保护，但可能会以轻微增加的启动时间和潜在的运行时性能开销为代价。Partial RELRO则提供了一个折中方案，它比没有RELRO的情况更安全，但提供的保护不如Full RELRO全面。</p>
+<p>在编译时，可以使用以下GCC链接器选项来指定RELRO的级别：</p>
+<ul>
+<li><strong>Partial RELRO</strong>: <code>-Wl,-z,relro</code></li>
+<li><strong>Full RELRO</strong>: <code>-Wl,-z,relro -Wl,-z,now</code></li>
+</ul>
+<p>选择哪种级别取决于你对安全性和性能的需求。对于安全性要求高的应用程序，推荐使用Full RELRO。</p>
+<h3 id="ASLR"><a href="#ASLR" class="headerlink" title="ASLR"></a>ASLR</h3><p>ASLR 是地址空间布局随机化（Address Space Layout Randomization）的缩写，是操作系统用来提高安全性的一种技术。ASLR 通过随机分配系统和程序的内存地址，使得攻击者很难预测和利用固定的地址来执行恶意操作。</p>
+<p>以下是关于 ASLR 的一些关键点：</p>
+<ol>
+<li><strong>随机化</strong>：ASLR 会随机化进程内存布局的关键区域的位置，例如可执行文件的基址、堆栈、堆和库的位置。</li>
+<li><strong>防止利用漏洞</strong>：ASLR 的主要目的是减少依赖于已知内存地址的攻击，如缓冲区溢出、返回到库函数攻击等。</li>
+<li><strong>实现方式</strong>：ASLR 由操作系统内核实现，通常对应用程序是透明的。但是，为了有效利用 ASLR，应用程序和系统库需要编译为位置无关代码（Position Independent Code，PIC）。</li>
+<li><strong>兼容性问题</strong>：虽然 ASLR 可以提高安全性，但有时也会导致一些假设地址不变的程序出现问题。开发者需要确保他们的程序能够适应随机化的地址。</li>
+<li><strong>绕过技术</strong>：尽管 ASLR 非常有效，但它并非万无一失。攻击者已经开发出了绕过 ASLR 的技术，比如通过暴力破解内存地址或使用信息泄露来发现进程的基址。</li>
+<li><strong>可配置性</strong>：在许多系统中，ASLR 可以根据需要进行配置甚至禁用。例如，在 Linux 系统中，<code>/proc/sys/kernel/randomize_va_space</code> 文件用于控制 ASLR 的使用。</li>
+<li><strong>栈保护和DEP</strong>：ASLR 通常与其他安全机制如栈保护和数据执行保护（Data Execution Prevention，DEP）一起使用，形成对攻击的更全面的防御。</li>
+</ol>
+<h3 id="PIE"><a href="#PIE" class="headerlink" title="PIE"></a>PIE</h3><p>简单来说pie就是指硬盘到可执行文件的映射 如果no pie那么映射就没有随机化</p>
+<p>PIE代表“位置独立可执行文件”（Position Independent Executable）。这是一种编译选项，可以使得生成的可执行文件在内存中的加载位置可以变化，而不是固定的。位置独立的代码（PIC）通常用于共享库（shared libraries），以便库可以被加载到任何内存地址，而不需要额外的重定位开销。PIE将这一概念扩展到了整个可执行文件。</p>
+<p>启用PIE的主要优点是提高了安全性，特别是与地址空间布局随机化（ASLR）一起使用时。ASLR可以随机化进程的内存布局，但如果可执行文件不是位置独立的，那么它的代码段通常会被加载到内存中的固定地址。这可能会使得某些类型的攻击（如基于内存地址的攻击）更容易执行。PIE使得整个可执行文件可以被加载到随机的地址，从而增加了攻击者成功利用内存漏洞的难度。</p>
+<p>以下是PIE的一些关键特性：</p>
+<ol>
+<li><strong>内存随机化</strong>：PIE允许操作系统在每次运行程序时将其加载到内存中的随机位置，这增加了攻击者预测程序内存布局的难度。</li>
+<li><strong>与ASLR的结合</strong>：PIE是ASLR有效的关键组成部分。没有PIE，ASLR对于可执行文件的代码段的随机化就不会那么有效。</li>
+<li><strong>性能开销</strong>：尽管现代处理器和操作系统已经对此进行了优化，但位置独立的代码可能会引入轻微的性能开销，因为它需要在运行时进行额外的地址计算。</li>
+<li><strong>链接选项</strong>：在GCC中，可以通过添加<code>-fPIE</code>（用于编译）和<code>-pie</code>（用于链接）选项来生成PIE。</li>
+</ol>
+<p>例如，使用以下命令编译和链接一个程序：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -fPIE -pie -o my_program my_program.c</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>广泛支持</strong>：大多数现代操作系统和编译器都支持PIE，使其成为提高软件安全性的标准做法。</li>
+</ol>
+<p>总的来说，PIE是现代软件安全的重要特性，它与ASLR等技术结合，有效地提高了操作系统的抵抗远程代码执行攻击的能力。</p>
+<h5 id="ASLR影响的是堆-共享库-栈等等"><a href="#ASLR影响的是堆-共享库-栈等等" class="headerlink" title="ASLR影响的是堆,共享库,栈等等"></a>ASLR影响的是堆,共享库,栈等等</h5><h5 id="PIE影响的是ELF本身的映射"><a href="#PIE影响的是ELF本身的映射" class="headerlink" title="PIE影响的是ELF本身的映射"></a>PIE影响的是ELF本身的映射</h5><h3 id="ROPgadget"><a href="#ROPgadget" class="headerlink" title="ROPgadget"></a>ROPgadget</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary rop  --only <span class="string">&#x27;pop|ret&#x27;</span> | grep <span class="string">&#x27;eax&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary ret2libc1 --<span class="built_in">string</span> <span class="string">&#x27;/bin/sh&#x27;</span> </span><br></pre></td></tr></table></figure>
+
+<h3 id="一些ASCII码对应的字符"><a href="#一些ASCII码对应的字符" class="headerlink" title="一些ASCII码对应的字符"></a>一些ASCII码对应的字符</h3><p>可能有人觉得没用，我觉得在gdb的时候还是有一点点用的，因此写下，可能也是本人水平低下</p>
+<table>
+<thead>
+<tr>
+<th align="left">十进制</th>
+<th align="left">十六进制</th>
+<th align="left">控制字符</th>
+<th align="left">转义字符</th>
+<th align="left">说明</th>
+<th align="left">Ctrl + 下列字母</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0</td>
+<td align="left">00</td>
+<td align="left">NUL</td>
+<td align="left">\0</td>
+<td align="left">Null character(空字符)</td>
+<td align="left">@</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">01</td>
+<td align="left">SOH</td>
+<td align="left"></td>
+<td align="left">Start of Header(标题开始)</td>
+<td align="left">A</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">02</td>
+<td align="left">STX</td>
+<td align="left"></td>
+<td align="left">Start of Text(正文开始)</td>
+<td align="left">B</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">03</td>
+<td align="left">ETX</td>
+<td align="left"></td>
+<td align="left">End of Text(正文结束)</td>
+<td align="left">C</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">04</td>
+<td align="left">EOT</td>
+<td align="left"></td>
+<td align="left">End of Transmission(传输结束)</td>
+<td align="left">D</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left">05</td>
+<td align="left">ENQ</td>
+<td align="left"></td>
+<td align="left">Enquiry(请求)</td>
+<td align="left">E</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left">06</td>
+<td align="left">ACK</td>
+<td align="left"></td>
+<td align="left">Acknowledgment(收到通知&#x2F;响应)</td>
+<td align="left">F</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left">07</td>
+<td align="left">BEL</td>
+<td align="left">\a</td>
+<td align="left">Bell(响铃)</td>
+<td align="left">G</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left">08</td>
+<td align="left">BS</td>
+<td align="left">\b</td>
+<td align="left">Backspace(退格)</td>
+<td align="left">H</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left">09</td>
+<td align="left">HT</td>
+<td align="left">\t</td>
+<td align="left">Horizontal Tab(水平制表符)</td>
+<td align="left">I</td>
+</tr>
+<tr>
+<td align="left">10</td>
+<td align="left">0A</td>
+<td align="left">LF</td>
+<td align="left">\n</td>
+<td align="left">Line feed(换行键)</td>
+<td align="left">J</td>
+</tr>
+<tr>
+<td align="left">11</td>
+<td align="left">0B</td>
+<td align="left">VT</td>
+<td align="left">\v</td>
+<td align="left">Vertical Tab(垂直制表符)</td>
+<td align="left">K</td>
+</tr>
+<tr>
+<td align="left">12</td>
+<td align="left">0C</td>
+<td align="left">FF</td>
+<td align="left">\f</td>
+<td align="left">Form feed(换页键)</td>
+<td align="left">L</td>
+</tr>
+<tr>
+<td align="left">13</td>
+<td align="left">0D</td>
+<td align="left">CR</td>
+<td align="left">\r</td>
+<td align="left">Carriage return(回车键)</td>
+<td align="left">M</td>
+</tr>
+<tr>
+<td align="left">14</td>
+<td align="left">0E</td>
+<td align="left">SO</td>
+<td align="left"></td>
+<td align="left">Shift Out(不用切换)</td>
+<td align="left">N</td>
+</tr>
+<tr>
+<td align="left">15</td>
+<td align="left">0F</td>
+<td align="left">SI</td>
+<td align="left"></td>
+<td align="left">Shift In(启用切换)</td>
+<td align="left">O</td>
+</tr>
+<tr>
+<td align="left">16</td>
+<td align="left">10</td>
+<td align="left">DLE</td>
+<td align="left"></td>
+<td align="left">Data Link Escape(数据链路转义)</td>
+<td align="left">P</td>
+</tr>
+<tr>
+<td align="left">17</td>
+<td align="left">11</td>
+<td align="left">DC1</td>
+<td align="left"></td>
+<td align="left">Device Control 1(设备控制1) &#x2F;XON(Transmit On)</td>
+<td align="left">Q</td>
+</tr>
+<tr>
+<td align="left">18</td>
+<td align="left">12</td>
+<td align="left">DC2</td>
+<td align="left"></td>
+<td align="left">Device Control 2(设备控制2)</td>
+<td align="left">R</td>
+</tr>
+<tr>
+<td align="left">19</td>
+<td align="left">13</td>
+<td align="left">DC3</td>
+<td align="left"></td>
+<td align="left">Device Control 3(设备控制3) &#x2F;XOFF(Transmit Off)</td>
+<td align="left">S</td>
+</tr>
+<tr>
+<td align="left">20</td>
+<td align="left">14</td>
+<td align="left">DC4</td>
+<td align="left"></td>
+<td align="left">Device Control 4(设备控制4)</td>
+<td align="left">T</td>
+</tr>
+<tr>
+<td align="left">21</td>
+<td align="left">15</td>
+<td align="left">NAK</td>
+<td align="left"></td>
+<td align="left">Negative Acknowledgement(拒绝接收&#x2F;无响应)</td>
+<td align="left">U</td>
+</tr>
+<tr>
+<td align="left">22</td>
+<td align="left">16</td>
+<td align="left">SYN</td>
+<td align="left"></td>
+<td align="left">Synchronous Idle(同步空闲)</td>
+<td align="left">V</td>
+</tr>
+<tr>
+<td align="left">23</td>
+<td align="left">17</td>
+<td align="left">ETB</td>
+<td align="left"></td>
+<td align="left">End of Trans the Block(传输块结束)</td>
+<td align="left">W</td>
+</tr>
+<tr>
+<td align="left">24</td>
+<td align="left">18</td>
+<td align="left">CAN</td>
+<td align="left"></td>
+<td align="left">Cancel(取消)</td>
+<td align="left">X</td>
+</tr>
+<tr>
+<td align="left">25</td>
+<td align="left">19</td>
+<td align="left">EM</td>
+<td align="left"></td>
+<td align="left">End of Medium(已到介质末端&#x2F;介质存储已满)</td>
+<td align="left">Y</td>
+</tr>
+<tr>
+<td align="left">26</td>
+<td align="left">1A</td>
+<td align="left">SUB</td>
+<td align="left"></td>
+<td align="left">Substitute(替补&#x2F;替换)</td>
+<td align="left">Z</td>
+</tr>
+<tr>
+<td align="left">27</td>
+<td align="left">1B</td>
+<td align="left">ESC</td>
+<td align="left">\e</td>
+<td align="left">Escape(溢出&#x2F;逃离&#x2F;取消)</td>
+<td align="left">[</td>
+</tr>
+<tr>
+<td align="left">28</td>
+<td align="left">1C</td>
+<td align="left">FS</td>
+<td align="left"></td>
+<td align="left">File Separator(文件分割符)</td>
+<td align="left">\</td>
+</tr>
+<tr>
+<td align="left">29</td>
+<td align="left">1D</td>
+<td align="left">GS</td>
+<td align="left"></td>
+<td align="left">Group Separator(分组符)</td>
+<td align="left">]</td>
+</tr>
+<tr>
+<td align="left">30</td>
+<td align="left">1E</td>
+<td align="left">RS</td>
+<td align="left"></td>
+<td align="left">Record Separator(记录分隔符)</td>
+<td align="left">^</td>
+</tr>
+<tr>
+<td align="left">31</td>
+<td align="left">1F</td>
+<td align="left">US</td>
+<td align="left"></td>
+<td align="left">Unit Separator(单元分隔符)</td>
+<td align="left">_</td>
+</tr>
+<tr>
+<td align="left">32</td>
+<td align="left">20</td>
+<td align="left">SP</td>
+<td align="left"></td>
+<td align="left">White space</td>
+<td align="left">[Space]</td>
+</tr>
+<tr>
+<td align="left">127</td>
+<td align="left">7F</td>
+<td align="left">DEL</td>
+<td align="left"></td>
+<td align="left">Delete(删除)</td>
+<td align="left">?</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://s1nec-1o.github.io">s1nec-1o</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://s1nec-1o.github.io/2024/01/17/Pwn%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E5%B0%8F%E7%9F%A5%E8%AF%86/">http://s1nec-1o.github.io/2024/01/17/Pwn%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E5%B0%8F%E7%9F%A5%E8%AF%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://s1nec-1o.github.io" target="_blank">S1nec-1o's B1og</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/traditional-pwn/">traditional pwn</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/BAMBOOiii/photo@main/img/202404281614288.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/01/17/2024mapna/" title="2024mapna"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">2024mapna</div></div></a></div><div class="next-post pull-right"><a href="/2024/01/16/My-first-blog/" title="My first blog"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">My first blog</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/02/01/2024-1-31-pwnable-bookwriter/" title="2024-1-31 pwnable_bookwriter"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-01</div><div class="title">2024-1-31 pwnable_bookwriter</div></div></a></div><div><a href="/2024/01/17/2024mapna/" title="2024mapna"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-17</div><div class="title">2024mapna</div></div></a></div><div><a href="/2024/01/17/2024rois-wp/" title="2024rois-wp"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-17</div><div class="title">2024rois-wp</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/BAMBOOiii/photo@main/img/202404281614288.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">s1nec-1o</div><div class="author-info__description">万事胜意</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="http://github.com/s1nec-1o"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">正在学习iot pwn 欢迎广大师傅与我交流</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PWN%E5%B0%8F%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">PWN小知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#NX"><span class="toc-number">1.1.</span> <span class="toc-text">NX</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Canary"><span class="toc-number">1.2.</span> <span class="toc-text">Canary</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GOT%E5%92%8CPLT%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">1.3.</span> <span class="toc-text">GOT和PLT不为人知的关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RELRP"><span class="toc-number">1.4.</span> <span class="toc-text">RELRP</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Partial-RELRO"><span class="toc-number">1.4.1.</span> <span class="toc-text">Partial RELRO</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Full-RELRO"><span class="toc-number">1.4.2.</span> <span class="toc-text">Full RELRO</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ASLR"><span class="toc-number">1.5.</span> <span class="toc-text">ASLR</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PIE"><span class="toc-number">1.6.</span> <span class="toc-text">PIE</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#ASLR%E5%BD%B1%E5%93%8D%E7%9A%84%E6%98%AF%E5%A0%86-%E5%85%B1%E4%BA%AB%E5%BA%93-%E6%A0%88%E7%AD%89%E7%AD%89"><span class="toc-number">1.6.0.1.</span> <span class="toc-text">ASLR影响的是堆,共享库,栈等等</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#PIE%E5%BD%B1%E5%93%8D%E7%9A%84%E6%98%AFELF%E6%9C%AC%E8%BA%AB%E7%9A%84%E6%98%A0%E5%B0%84"><span class="toc-number">1.6.0.2.</span> <span class="toc-text">PIE影响的是ELF本身的映射</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ROPgadget"><span class="toc-number">1.7.</span> <span class="toc-text">ROPgadget</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9BASCII%E7%A0%81%E5%AF%B9%E5%BA%94%E7%9A%84%E5%AD%97%E7%AC%A6"><span class="toc-number">1.8.</span> <span class="toc-text">一些ASCII码对应的字符</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/11/%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%8E%E6%8F%90%E5%8F%96/" title="路由器的文件系统与提取">路由器的文件系统与提取</a><time datetime="2024-06-11T09:08:17.000Z" title="发表于 2024-06-11 17:08:17">2024-06-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/11/mips-shellcode/" title="mips-shellcode">mips-shellcode</a><time datetime="2024-06-11T09:06:01.000Z" title="发表于 2024-06-11 17:06:01">2024-06-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/05/30/CVE-2023-34644%E5%A4%8D%E7%8E%B0/" title="CVE-2023-34644复现">CVE-2023-34644复现</a><time datetime="2024-05-29T16:35:54.000Z" title="发表于 2024-05-30 00:35:54">2024-05-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/05/26/Fuzz%E5%88%9D%E6%8E%A2/" title="Fuzz初探">Fuzz初探</a><time datetime="2024-05-25T17:02:21.000Z" title="发表于 2024-05-26 01:02:21">2024-05-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/05/21/DIR-815%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" title="DIR-815漏洞复现">DIR-815漏洞复现</a><time datetime="2024-05-21T14:21:25.000Z" title="发表于 2024-05-21 22:21:25">2024-05-21</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/BAMBOOiii/photo@main/img/202404281616326.png')"><div id="footer-wrap"><div class="copyright">&copy;2024 By s1nec-1o</div><div class="footer_custom_text">介是s1nec-1o的博客</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.12.0"></script><script src="/js/main.js?v=4.12.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><div><canvas id="snow" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;pointer-events:none"></canvas></div><script>const notMobile = (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)));</script><script async type="text/javascript" src="https://cdn.jsdelivr.net/gh/Candinya/Kratos-Rebirth@latest/source/js/snow.min.js"></script></div></body></html>
