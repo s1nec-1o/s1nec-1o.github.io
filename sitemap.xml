@@ -277,14 +277,7 @@
   </url>
   
   <url>
-    <loc>http://s1nec-1o.github.io/tags/IOT%E5%AE%89%E5%85%A8/</loc>
-    <lastmod>2024-06-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://s1nec-1o.github.io/tags/%E6%9D%82%E8%B0%88/</loc>
+    <loc>http://s1nec-1o.github.io/tags/go/</loc>
     <lastmod>2024-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -298,7 +291,14 @@
   </url>
   
   <url>
-    <loc>http://s1nec-1o.github.io/tags/go/</loc>
+    <loc>http://s1nec-1o.github.io/tags/IOT%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2024-06-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://s1nec-1o.github.io/tags/%E6%9D%82%E8%B0%88/</loc>
     <lastmod>2024-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -335,13 +335,6 @@
   </url>
   
   <url>
-    <loc>http://s1nec-1o.github.io/categories/IOT%E5%AE%89%E5%85%A8/</loc>
-    <lastmod>2024-06-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>http://s1nec-1o.github.io/categories/Go-pwn/</loc>
     <lastmod>2024-06-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -349,7 +342,7 @@
   </url>
   
   <url>
-    <loc>http://s1nec-1o.github.io/categories/Pwn%E7%9F%A5%E8%AF%86/</loc>
+    <loc>http://s1nec-1o.github.io/categories/IOT%E5%AE%89%E5%85%A8/</loc>
     <lastmod>2024-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -363,13 +356,6 @@
   </url>
   
   <url>
-    <loc>http://s1nec-1o.github.io/categories/%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/</loc>
-    <lastmod>2024-06-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>http://s1nec-1o.github.io/categories/IOT%E5%AE%89%E5%85%A8/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</loc>
     <lastmod>2024-06-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -377,7 +363,21 @@
   </url>
   
   <url>
+    <loc>http://s1nec-1o.github.io/categories/Pwn%E7%9F%A5%E8%AF%86/</loc>
+    <lastmod>2024-06-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>http://s1nec-1o.github.io/categories/kernel-pwn/</loc>
+    <lastmod>2024-06-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://s1nec-1o.github.io/categories/%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/</loc>
     <lastmod>2024-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
