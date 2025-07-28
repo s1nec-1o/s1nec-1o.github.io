@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://s1nec-1o.github.io/2025/07/28/Fuzz%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B9%8Bafl-gcc&afl-as/</loc>
+    <loc>http://s1nec-1o.github.io/2025/07/28/AFL%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B9%8Bafl-gcc&afl-as/</loc>
     
     <lastmod>2025-07-28</lastmod>
     
@@ -457,6 +457,13 @@
   </url>
   
   <url>
+    <loc>http://s1nec-1o.github.io/tags/Fuzz/</loc>
+    <lastmod>2025-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>http://s1nec-1o.github.io/tags/android/</loc>
     <lastmod>2025-07-28</lastmod>
     <changefreq>weekly</changefreq>
@@ -478,13 +485,6 @@
   </url>
   
   <url>
-    <loc>http://s1nec-1o.github.io/tags/Fuzz/</loc>
-    <lastmod>2025-07-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>http://s1nec-1o.github.io/tags/go/</loc>
     <lastmod>2025-07-28</lastmod>
     <changefreq>weekly</changefreq>
@@ -492,14 +492,14 @@
   </url>
   
   <url>
-    <loc>http://s1nec-1o.github.io/tags/%E6%9D%82%E8%B0%88/</loc>
+    <loc>http://s1nec-1o.github.io/tags/hexagon/</loc>
     <lastmod>2025-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://s1nec-1o.github.io/tags/hexagon/</loc>
+    <loc>http://s1nec-1o.github.io/tags/%E6%9D%82%E8%B0%88/</loc>
     <lastmod>2025-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -534,14 +534,14 @@
   </url>
   
   <url>
-    <loc>http://s1nec-1o.github.io/tags/Qiling/</loc>
+    <loc>http://s1nec-1o.github.io/tags/Web/</loc>
     <lastmod>2025-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://s1nec-1o.github.io/tags/Web/</loc>
+    <loc>http://s1nec-1o.github.io/tags/Qiling/</loc>
     <lastmod>2025-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -606,7 +606,7 @@
   </url>
   
   <url>
-    <loc>http://s1nec-1o.github.io/categories/hexagon-pwn/</loc>
+    <loc>http://s1nec-1o.github.io/categories/Pwn%E7%9F%A5%E8%AF%86/</loc>
     <lastmod>2025-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -620,7 +620,7 @@
   </url>
   
   <url>
-    <loc>http://s1nec-1o.github.io/categories/Pwn%E7%9F%A5%E8%AF%86/</loc>
+    <loc>http://s1nec-1o.github.io/categories/hexagon-pwn/</loc>
     <lastmod>2025-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
